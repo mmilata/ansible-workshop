@@ -1,0 +1,16 @@
+---
+- name: install mariadb-server and php bindings
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - mariadb-server
+  - php5-mysql
+  notify:
+  - restart apache
+
+- name: enable and start mariadb-server
+  service:
+    name: mysql
+    state: started
+    enabled: yes

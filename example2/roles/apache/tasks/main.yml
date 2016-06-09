@@ -1,0 +1,38 @@
+---
+- name: install apache and mod_php
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - apache2
+  - libapache2-mod-php5
+
+- name: configure server status page
+  template:
+    src: status.conf.j2
+    dest: /etc/apache2/mods-available/status.conf
+  when: apache_status_enabled
+  notify:
+  - restart apache
+
+- name: enable server status page
+  apache2_module:
+    name: status
+    state: present
+  when: apache_status_enabled
+  notify:
+  - restart apache
+
+- name: disable server status page
+  apache2_module:
+    name: status
+    state: absent
+  when: not apache_status_enabled
+  notify:
+  - restart apache
+
+- name: enable and start apache
+  service:
+    name: apache2
+    state: started
+    enabled: yes

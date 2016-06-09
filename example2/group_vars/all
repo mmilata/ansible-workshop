@@ -1,0 +1,9 @@
+---
+apache_status_enabled: true
+
+mediawiki_db_name: mediawiki
+mediawiki_db_user: mediawiki
+mediawiki_db_pass: verySecretPASSWORD
+
+mediawiki_sitename: AnsibleTestWiki
+mediawiki_scriptpath: /wiki

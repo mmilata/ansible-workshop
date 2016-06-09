@@ -1,0 +1,3 @@
+---
+apache_status_enabled: no
+apache_status_subnet: 192.168.0.0/16

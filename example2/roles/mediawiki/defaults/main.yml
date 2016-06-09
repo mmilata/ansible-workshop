@@ -1,0 +1,17 @@
+---
+mediawiki_major: "1.26"
+mediawiki_minor: "3"
+mediawiki_archive_sha256: 7284e2bb873dbac08157d8a9592dc2944724ffe0c49368017a78fb3390ef4676
+
+mediawiki_install_dir: /opt
+mediawiki_sitename: Wiki
+mediawiki_scriptpath: /wiki
+
+mediawiki_db_name: wikidb
+mediawiki_db_user: wikiuser
+mediawiki_db_pass: notsecretpassword
+
+mediawiki_admin_user: Admin
+mediawiki_admin_pass: notsecreteither
+
+mediawiki_version: mediawiki-{{ mediawiki_major }}.{{ mediawiki_minor }}

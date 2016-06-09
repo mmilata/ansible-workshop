@@ -1,0 +1,49 @@
+---
+- name: install dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - ca-certificates
+  - python-mysqldb
+
+- name: download mediawiki source
+  get_url:
+    url: https://releases.wikimedia.org/mediawiki/{{ mediawiki_major }}/{{ mediawiki_version }}.tar.gz
+    dest: /root/{{ mediawiki_version }}.tar.gz
+    checksum: sha256:{{ mediawiki_archive_sha256 }}
+
+- name: unpack mediawiki source
+  unarchive:
+    src: /root/{{ mediawiki_version }}.tar.gz
+    dest: "{{ mediawiki_install_dir }}"
+    copy: no
+
+- name: create symlink in apache document root
+  file:
+    src: "{{ mediawiki_install_dir }}/{{ mediawiki_version }}"
+    dest: /var/www/html/{{ mediawiki_scriptpath }}
+    state: link
+
+- name: create database
+  mysql_db:
+    name: "{{ mediawiki_db_name }}"
+    state: present
+
+- name: create database user
+  mysql_user:
+    name: "{{ mediawiki_db_user }}"
+    password: "{{ mediawiki_db_pass }}"
+    priv: "{{ mediawiki_db_name }}.*:ALL"
+
+- name: configure mediawiki
+  command: >
+    php {{ mediawiki_install_dir }}/{{ mediawiki_version }}/maintenance/install.php
+    --dbname {{ mediawiki_db_name }}
+    --dbuser {{ mediawiki_db_user }}
+    --dbpass {{ mediawiki_db_pass }}
+    --pass {{ mediawiki_admin_pass }}
+    {{ mediawiki_sitename }}
+    {{ mediawiki_admin_user }}
+  args:
+    creates: "{{ mediawiki_install_dir }}/{{ mediawiki_version }}/LocalSettings.php"
