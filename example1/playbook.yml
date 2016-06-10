@@ -2,13 +2,14 @@
 - hosts: all
   vars:
     greeting: Hello!
+    apache_port: 80
 
   tasks:
     - name: make sure apache is installed
       apt: name=apache2 state=present
 
     - name: configure apache to listen on nonstandard port
-      lineinfile: dest=/etc/apache2/ports.conf regexp="^Listen " line="Listen 80 8080" backup=yes
+      lineinfile: dest=/etc/apache2/ports.conf regexp="^Listen " line="Listen {{ apache_port }}" backup=yes
       notify: restart apache
 
     - name: make sure apache is started and will be run at boot
